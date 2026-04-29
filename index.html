@@ -603,6 +603,31 @@ function calcResult() {
   `).join('');
 
   _resultData = { key, res, hR, yR };
+
+  /* ── Отправка лида в Make.com ───────────────────
+     Замени MAKE_WEBHOOK_URL на свой URL из Make.com
+     Пример: https://hook.eu1.make.com/abcdef123456
+  ─────────────────────────────────────────────── */
+  const MAKE_WEBHOOK_URL = 'https://hook.us2.make.com/u0mq53g9kf00dfq47m78huhax2cxuyib';
+
+  if (MAKE_WEBHOOK_URL !== 'ВСТАВЬ_СВОЙ_URL_ИЗ_MAKE_СЮДА') {
+    const user = tg?.initDataUnsafe?.user || {};
+    fetch(MAKE_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        tg_id:       user.id         || 'anonymous',
+        name:        user.first_name  || '—',
+        username:    user.username    || '—',
+        result:      res.state,
+        result_key:  key,
+        hyper_score: hR,
+        hypo_score:  yR,
+        date:        new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' })
+      })
+    }).catch(() => {}); // тихо проглатываем ошибки, чтобы не ломать UX
+  }
+
   haptic('heavy');
   show('result');
 }
