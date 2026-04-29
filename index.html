@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Окно Толерантности</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    /* ── DESIGN TOKENS ─────────────────────────────────────── */
+    :root {
+      --bg:          #0f0e17;
+      --surface:     #1a1830;
+      --surface2:    #231f3a;
+      --accent:      #7c6af7;
+      --accent2:     #b48ef7;
+      --text:        #fffffe;
+      --muted:       #a9a5c8;
+      --hyper:       #f7775e;
+      --hypo:        #5ea6f7;
+      --green:       #5ef7a6;
+      --warn:        #f7c55e;
+      --border:      rgba(255,255,255,0.07);
+      --radius:      16px;
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after {
+      margin: 0; padding: 0; box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html { height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── SCREENS ────────────────────────────────────────────── */
+    .screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+      padding: 28px 20px 40px;
+    }
+    .screen.active { display: flex; }
+
+    /* ── ANIMATIONS ─────────────────────────────────────────── */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+    @keyframes slideIn  { from { opacity:0; transform:translateX(28px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes breathe  { 0%,100% { transform:scale(1);    box-shadow:0 0 40px rgba(124,106,247,.35); }
+                          50%     { transform:scale(1.11); box-shadow:0 0 90px rgba(124,106,247,.65); } }
+    @keyframes float    { 0%,100% { transform:translateY(0);   }  50% { transform:translateY(-9px); } }
+    @keyframes pulse    { 0%,100% { opacity:1; } 50% { opacity:.45; } }
+    @keyframes fillBar  { from { width:0; } }
+    @keyframes pop      { 0% { transform:scale(0.85); opacity:0; } 60% { transform:scale(1.06); } 100% { transform:scale(1); opacity:1; } }
+
+    .anim-up   { animation: fadeUp  .4s ease both; }
+    .anim-in   { animation: fadeIn  .35s ease both; }
+    .anim-slide { animation: slideIn .38s cubic-bezier(.22,.9,.36,1) both; }
+
+    /* ── BUTTONS ────────────────────────────────────────────── */
+    .btn {
+      border: none; border-radius: var(--radius);
+      padding: 18px; font-size: 17px; font-weight: 600;
+      cursor: pointer; width: 100%;
+      transition: transform .13s, opacity .13s;
+      letter-spacing: -.2px;
+    }
+    .btn:active { transform: scale(.965); opacity: .88; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff;
+      box-shadow: 0 8px 28px rgba(124,106,247,.38);
+    }
+    .btn-ghost {
+      background: var(--surface); color: var(--muted);
+      border: 1px solid var(--border); margin-top: 10px; font-size: 15px;
+    }
+    .btn-tg {
+      background: linear-gradient(135deg, #229ED9, #0e7fc0);
+      color: #fff;
+      box-shadow: 0 6px 22px rgba(34,158,217,.32);
+    }
+
+    .spacer { flex: 1; }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN 1 — INTRO
+    ══════════════════════════════════════════════════════════ */
+    .orb {
+      width: 108px; height: 108px; border-radius: 50%;
+      background: radial-gradient(circle at 32% 32%, #c4aeff, var(--accent) 55%, #3d2dbf);
+      margin: 0 auto 22px;
+      animation: breathe 4s ease-in-out infinite;
+    }
+    .intro-hero { text-align: center; padding: 16px 0 28px; }
+    .intro-title {
+      font-size: 27px; font-weight: 800; letter-spacing: -.5px; line-height: 1.15;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 6px;
+    }
+    .intro-sub { font-size: 14px; color: var(--muted); }
+
+    .quote-card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 16px 18px; margin-bottom: 14px;
+      border-left: 3px solid var(--accent);
+    }
+    .quote-card p  { font-size: 14px; line-height: 1.65; color: var(--muted); }
+    .quote-card cite { display: block; margin-top: 8px; font-size: 12px; color: var(--accent2); font-style: normal; }
+
+    .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+    .stat-card {
+      background: var(--surface); border-radius: 14px;
+      padding: 14px 12px; text-align: center; border: 1px solid var(--border);
+    }
+    .stat-icon  { font-size: 22px; margin-bottom: 4px; }
+    .stat-value { font-size: 19px; font-weight: 700; color: var(--accent2); }
+    .stat-label { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.3; }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN 2 — QUESTION
+    ══════════════════════════════════════════════════════════ */
+    .progress-wrap { margin-bottom: 22px; }
+    .progress-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; }
+    .progress-label { font-size: 13px; color: var(--muted); }
+    .progress-pct   { font-size: 13px; font-weight: 700; color: var(--accent2); }
+    .progress-track { background: var(--surface2); border-radius: 100px; height: 5px; overflow: hidden; }
+    .progress-fill  {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transition: width .55s cubic-bezier(.4,0,.2,1);
+    }
+
+    .section-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px; border-radius: 100px;
+      font-size: 12px; font-weight: 500; margin-bottom: 20px; border: 1px solid;
+    }
+    .section-tag.hyper { color: var(--hyper); border-color: rgba(247,119,94,.35); background: rgba(247,119,94,.07); }
+    .section-tag.hypo  { color: var(--hypo);  border-color: rgba(94,166,247,.35);  background: rgba(94,166,247,.07);  }
+
+    .q-emoji { font-size: 58px; display:block; text-align:center; margin-bottom: 18px; animation: float 3.5s ease-in-out infinite; }
+    .q-title { font-size: 19px; font-weight: 700; text-align: center; line-height: 1.35; margin-bottom: 10px; }
+    .q-desc  {
+      background: var(--surface); border-radius: 12px;
+      padding: 12px 16px; font-size: 14px; color: var(--muted);
+      line-height: 1.65; text-align: center; font-style: italic; margin-bottom: 30px;
+    }
+
+    /* Slider */
+    .slider-value-box { text-align: center; margin-bottom: 16px; }
+    .slider-num {
+      font-size: 56px; font-weight: 800; line-height: 1;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      transition: opacity .1s;
+    }
+    .slider-hint { font-size: 13px; color: var(--muted); margin-top: 5px; min-height: 18px; transition: opacity .2s; }
+
+    input[type=range] {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 10px; border-radius: 100px;
+      outline: none; cursor: pointer;
+      /* fill updated via JS */
+      background: linear-gradient(90deg, var(--accent) 0%, var(--accent2) 50%, var(--surface2) 50%);
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      box-shadow: 0 2px 14px rgba(124,106,247,.55);
+      transition: transform .1s;
+    }
+    input[type=range]:active::-webkit-slider-thumb { transform: scale(1.22); }
+
+    .slider-scale { display:flex; justify-content:space-between; padding: 6px 2px 0; }
+    .slider-scale span { font-size: 11px; color: var(--muted); }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN 3 — TRANSITION
+    ══════════════════════════════════════════════════════════ */
+    #transition { justify-content: center; align-items: center; text-align: center; gap: 0; }
+    .tr-icon   { font-size: 68px; margin-bottom: 20px; animation: pop .5s ease both; }
+    .tr-title  { font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    .tr-text   { font-size: 15px; color: var(--muted); line-height: 1.65; max-width: 300px; margin: 0 auto 28px; }
+
+    .dots-row  { display:flex; gap: 5px; justify-content:center; margin-bottom: 32px; flex-wrap: wrap; max-width: 260px; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--surface2); }
+    .dot.done    { background: var(--accent); }
+    .dot.current { background: var(--accent2); animation: pulse 1.5s ease infinite; }
+
+    /* ══════════════════════════════════════════════════════════
+       SCREEN 4 — RESULT
+    ══════════════════════════════════════════════════════════ */
+    .result-hero { text-align: center; padding: 10px 0 24px; }
+    .result-icon {
+      font-size: 68px; display: block; margin-bottom: 14px;
+      animation: pop .55s cubic-bezier(.22,.9,.36,1) both;
+    }
+    .result-state  { font-size: 22px; font-weight: 800; margin-bottom: 6px; letter-spacing: -.3px; }
+    .result-tagline { font-size: 14px; color: var(--muted); }
+
+    .card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 18px; margin-bottom: 14px;
+    }
+    .card-label {
+      font-size: 11px; text-transform: uppercase; letter-spacing: .8px;
+      color: var(--muted); margin-bottom: 14px; font-weight: 600;
+    }
+
+    .score-row  { margin-bottom: 12px; }
+    .score-row:last-child { margin-bottom: 0; }
+    .score-meta { display:flex; justify-content:space-between; align-items:center; margin-bottom: 7px; }
+    .score-name { font-size: 13px; font-weight: 600; }
+    .score-val  { font-size: 14px; font-weight: 700; }
+    .score-bg   { background: var(--surface2); border-radius: 100px; height: 8px; overflow: hidden; }
+    .score-bar  { height: 100%; border-radius: 100px; animation: fillBar 1.1s ease both; }
+    .score-bar.hyper { background: linear-gradient(90deg, var(--hyper), var(--warn)); }
+    .score-bar.hypo  { background: linear-gradient(90deg, var(--hypo),  #5ef7e4); }
+
+    .result-body { font-size: 15px; line-height: 1.75; color: var(--muted); }
+    .result-body strong { color: var(--text); }
+    .result-body p { margin-bottom: 12px; }
+    .result-body p:last-child { margin-bottom: 0; }
+
+    .symptom-item { display:flex; align-items:center; gap: 10px; margin-bottom: 9px; }
+    .symptom-item:last-child { margin-bottom: 0; }
+    .symptom-emoji { font-size: 19px; min-width: 26px; }
+    .symptom-name  { font-size: 13px; line-height: 1.3; flex: 1; color: var(--muted); }
+    .symptom-score { font-size: 14px; font-weight: 700; color: var(--accent2); min-width: 22px; text-align:right; }
+
+    .support-block {
+      background: linear-gradient(135deg, rgba(124,106,247,.13), rgba(180,142,247,.08));
+      border: 1px solid rgba(124,106,247,.22);
+      border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px;
+      font-size: 14px; line-height: 1.65; color: var(--muted);
+    }
+    .support-block strong { color: var(--accent2); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ SCREEN 1: INTRO ══════════════ -->
+<div id="intro" class="screen active">
+
+  <div class="intro-hero">
+    <div class="orb anim-up"></div>
+    <div class="intro-title anim-up" style="animation-delay:.08s">Окно<br>Толерантности</div>
+    <div class="intro-sub  anim-up" style="animation-delay:.13s">Тест состояния нервной системы</div>
+  </div>
+
+  <div class="quote-card anim-up" style="animation-delay:.18s">
+    <p>«Окно Толерантности» — оптимальный диапазон активации нервной системы, в котором человек способен эффективно функционировать, учиться и восстанавливаться.</p>
+    <cite>— Питер Левин, Дэн Сигел</cite>
+  </div>
+
+  <div class="stat-grid anim-up" style="animation-delay:.22s">
+    <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value">21</div><div class="stat-label">короткий вопрос</div></div>
+    <div class="stat-card"><div class="stat-icon">⏱</div><div class="stat-value">5 мин</div><div class="stat-label">примерно</div></div>
+    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value">0 – 10</div><div class="stat-label">шкала ответов</div></div>
+    <div class="stat-card"><div class="stat-icon">🔒</div><div class="stat-value">анонимно</div><div class="stat-label">данные не хранятся</div></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <button class="btn btn-primary anim-up" style="animation-delay:.26s" onclick="startTest()">
+    Начать тест →
+  </button>
+</div>
+
+
+<!-- ══════════════ SCREEN 2: QUESTION ══════════════ -->
+<div id="question" class="screen">
+
+  <div class="progress-wrap">
+    <div class="progress-meta">
+      <span class="progress-label" id="progLabel">Вопрос 1 из 21</span>
+      <span class="progress-pct"   id="progPct">0%</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progFill" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="section-tag hyper" id="sectionTag">
+    <span id="sectionIcon">🔥</span>
+    <span id="sectionName">Активация</span>
+  </div>
+
+  <span class="q-emoji" id="qEmoji">😰</span>
+  <div class="q-title"  id="qTitle">…</div>
+  <div class="q-desc"   id="qDesc">…</div>
+
+  <div class="slider-value-box">
+    <div class="slider-num"  id="sliderNum">5</div>
+    <div class="slider-hint" id="sliderHint">бывает заметно</div>
+  </div>
+  <input type="range" id="slider" min="0" max="10" value="5"
+         oninput="onSlider(this.value)">
+  <div class="slider-scale">
+    <span>0 — совсем нет</span>
+    <span>5</span>
+    <span>10 — очень сильно</span>
+  </div>
+
+  <div class="spacer"></div>
+
+  <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+    Дальше →
+  </button>
+</div>
+
+
+<!-- ══════════════ SCREEN 3: TRANSITION ══════════════ -->
+<div id="transition" class="screen">
+  <div class="tr-icon">✅</div>
+  <div class="tr-title">Первая половина пройдена</div>
+  <div class="tr-text">
+    Теперь про другое состояние — когда всё как будто замедляется, тускнеет и отключается.
+  </div>
+  <div class="dots-row" id="dotsRow"></div>
+  <button class="btn btn-primary" onclick="continueTest()">
+    Продолжить →
+  </button>
+</div>
+
+
+<!-- ══════════════ SCREEN 4: RESULT ══════════════ -->
+<div id="result" class="screen">
+
+  <div class="result-hero">
+    <span class="result-icon"   id="rIcon">🌿</span>
+    <div  class="result-state"  id="rState">…</div>
+    <div  class="result-tagline" id="rTagline">…</div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Показатели</div>
+    <div class="score-row">
+      <div class="score-meta">
+        <span class="score-name" style="color:var(--hyper)">🔥 Активация (перегруз)</span>
+        <span class="score-val"  id="rHyperVal">—</span>
+      </div>
+      <div class="score-bg"><div class="score-bar hyper" id="rHyperBar" style="width:0%"></div></div>
+    </div>
+    <div class="score-row">
+      <div class="score-meta">
+        <span class="score-name" style="color:var(--hypo)">🌫️ Торможение (истощение)</span>
+        <span class="score-val"  id="rHypoVal">—</span>
+      </div>
+      <div class="score-bg"><div class="score-bar hypo" id="rHypoBar" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="result-body" id="rBody"></div>
+  </div>
+
+  <div class="card" id="topCard">
+    <div class="card-label">Что проявлено сильнее всего</div>
+    <div id="topList"></div>
+  </div>
+
+  <div class="support-block" id="rSupport"></div>
+
+  <button class="btn btn-tg"   onclick="shareResult()">Поделиться результатом 📤</button>
+  <button class="btn btn-ghost" onclick="restartTest()">Пройти снова</button>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════ -->
+<script>
+/* ── Telegram init ──────────────────────────────── */
+const tg = window.Telegram?.WebApp;
+if (tg) { tg.ready(); tg.expand(); }
+function haptic(type = 'light') { tg?.HapticFeedback?.impactOccurred?.(type); }
+
+/* ── Questions ─────────────────────────────────── */
+const Q = [
+  // ГИПЕРАКТИВАЦИЯ
+  { s:'hyper', e:'😰', t:'Внутреннее напряжение или тревожный фон',               d:'внутри всё время натянуто, сложно расслабиться, есть постоянный фон тревоги' },
+  { s:'hyper', e:'😤', t:'Раздражение, вспышки, трудно сдержаться',               d:'мелочи бесят сильнее обычного, легко вспыхиваешь' },
+  { s:'hyper', e:'😨', t:'Ощущение опасности, сложно почувствовать безопасность', d:'как будто нужно быть настороже, трудно расслабиться' },
+  { s:'hyper', e:'🌀', t:'Голова не выключается, мысли по кругу',                  d:'постоянно думаешь одно и то же, не можешь остановить поток мыслей' },
+  { s:'hyper', e:'🌊', t:'Чувства захлёстывают, трудно собраться',                 d:'эмоции накрывают так сильно, что сложно держаться в фокусе' },
+  { s:'hyper', e:'⚡', t:'Ускоренность: спешка, быстрая речь, трудно остановиться',d:'всё время спешишь, сложно замедлиться даже без причины' },
+  { s:'hyper', e:'😬', t:'Зажатость тела: плечи, челюсть, мышцы',                 d:'тело напряжено, челюсть сжата, плечи подняты' },
+  { s:'hyper', e:'😴', t:'Трудно расслабиться / поверхностный сон',                d:'вроде отдыхаешь, но организм не отпускает' },
+  { s:'hyper', e:'🦋', t:'Суета, сложно усидеть спокойно',                         d:'хочется переключаться, вставать, двигаться — трудно просто быть' },
+  { s:'hyper', e:'💓', t:'Телесный стресс: сердцебиение, потливость',              d:'тело реагирует как при тревоге или перегрузе' },
+  { s:'hyper', e:'👂', t:'Повышенная чувствительность к звукам и свету',           d:'обычные звуки, свет или люди раздражают сильнее обычного' },
+  // ГИПОАКТИВАЦИЯ
+  { s:'hypo',  e:'🤖', t:'Отстранённость, как будто автопилот',                    d:'делаешь всё автоматически, без ощущения включённости' },
+  { s:'hypo',  e:'🫥', t:'Онемение или ощущение, будто смотришь со стороны',       d:'как будто отключился от происходящего или от себя' },
+  { s:'hypo',  e:'😶', t:'Чувства приглушены или недоступны',                       d:'сложно почувствовать радость, интерес, злость или грусть' },
+  { s:'hypo',  e:'🌫️',t:'Туман в голове, трудно думать',                           d:'мысли вязкие, сложно сосредоточиться и собраться' },
+  { s:'hypo',  e:'🤷', t:'Сложно принимать даже простые решения',                  d:'выбрать еду, написать сообщение или начать дело уже тяжело' },
+  { s:'hypo',  e:'🐢', t:'Замедленность мыслей, речи, движений',                   d:'будто всё внутри тормозит' },
+  { s:'hypo',  e:'🏋️',t:'Слабость, тяжесть в теле, мало сил',                     d:'тело тяжёлое, энергии почти нет' },
+  { s:'hypo',  e:'🌙', t:'Сонливость или сон не восстанавливает',                   d:'спишь, но ощущение усталости не уходит' },
+  { s:'hypo',  e:'🥶', t:'Холод, зябкость, снижение ресурса',                       d:'мёрзнешь, нет тонуса, организм как будто экономит заряд' },
+  { s:'hypo',  e:'🐚', t:'Хочется спрятаться, избегать людей',                      d:'нет сил на общение, хочется закрыться от мира' },
+];
+
+const HINTS = [
+  'совсем не про меня', 'едва заметно', 'редко бывает',
+  'иногда бывает', 'замечаю это', 'бывает заметно',
+  'довольно часто', 'часто так бывает', 'очень часто',
+  'почти всегда', 'очень сильно про меня'
+];
+
+/* ── Results config ────────────────────────────── */
+const RESULTS = {
+  window: {
+    icon: '🌿', color: '#5ef7a6',
+    state: 'Устойчивое окно толерантности',
+    tagline: 'Нервная система сейчас в ресурсе',
+    body: `<p><strong>Похоже, прямо сейчас ты достаточно хорошо справляешься с нагрузкой.</strong></p>
+           <p>Нервная система держит баланс — нет ни явного перегруза, ни ощутимого истощения. Ты можешь функционировать, чувствовать и восстанавливаться.</p>
+           <p>Это не «всё идеально» — просто сейчас есть ресурс. Его стоит беречь.</p>`,
+    support: `<strong>Что помогает удерживать это состояние:</strong> регулярный сон, паузы в течение дня, внимание к телесным сигналам. Ты уже знаешь, что работает — продолжай.`
+  },
+  hyper: {
+    icon: '🔥', color: '#f7775e',
+    state: 'Перегруз нервной системы',
+    tagline: 'Организм работает на высоких оборотах',
+    body: `<p><strong>Похоже, нервная система давно работает на высоких оборотах и не успевает восстанавливаться.</strong></p>
+           <p>Поэтому голова не выключается, тело зажато, а сил становится меньше — даже если внешне всё «вроде нормально».</p>
+           <p>Это не «с тобой что-то не так». Часто так выглядит накопленная нагрузка, когда нервная система долго держит тонус без настоящего отдыха.</p>`,
+    support: `<strong>Нервной системе в перегрузе нужна не «ещё одна попытка», а пауза.</strong> Не «брось всё» — а замедлиться хотя бы в мелочах. Это работает сильнее, чем кажется.`
+  },
+  hypo: {
+    icon: '🌫️', color: '#5ea6f7',
+    state: 'Истощение нервной системы',
+    tagline: 'Организм перешёл в режим экономии',
+    body: `<p><strong>Похоже, нервная система перешла в режим «экономии заряда».</strong></p>
+           <p>Это бывает, когда она долго справлялась с нагрузкой — и в какой-то момент просто притормозила. Отсюда туман, отстранённость, слабость и нежелание контактировать с миром.</p>
+           <p>Это не лень и не «что-то со мной не так». Это защитная реакция системы, которая давно не восстанавливалась.</p>`,
+    support: `<strong>При истощении важно не «разогнать» себя, а дать системе безопасно оттаять.</strong> Тепло, простые приятные вещи, меньше требований к себе — это не баловство, это лечение.`
+  },
+  swing: {
+    icon: '🎢', color: '#b48ef7',
+    state: 'Качели нервной системы',
+    tagline: 'Между перегрузом и истощением',
+    body: `<p><strong>Похоже, нервная система мечется между двумя полюсами: то перегружает, то отключается.</strong></p>
+           <p>Это одно из самых изматывающих состояний — нет стабильности. То внутри всё натянуто и не выключается, то резко накрывает туман и усталость.</p>
+           <p>Так бывает, когда организм слишком долго работал в условиях нестабильности — и уже не знает, как по-другому.</p>`,
+    support: `<strong>Нервной системе в «качелях» нужна прежде всего предсказуемость.</strong> Простые ритмы — сон в одно время, еда, небольшие паузы — это якоря. Они работают медленно, но работают.`
+  },
+  accumulated: {
+    icon: '⚡', color: '#f7c55e',
+    state: 'Накопленная нагрузка',
+    tagline: 'Нервная система близка к пределу',
+    body: `<p><strong>Похоже, нагрузка накопилась — и нервная система это уже чувствует.</strong></p>
+           <p>Пока нет явного перегруза или истощения, но граница близко. Не «всё плохо», но «стоит обратить внимание».</p>
+           <p>Часто в таком состоянии человек справляется — но ценой большего, чем должно быть.</p>`,
+    support: `<strong>Хорошая новость:</strong> на этом этапе небольшие изменения дают заметный эффект. Не нужно кардинально перестраивать жизнь — достаточно начать замечать, где тратится больше всего сил.`
+  }
+};
+
+/* ── State ─────────────────────────────────────── */
+let idx = 0;
+let answers = [];
+let transitionShown = false;
+let _resultData = null;
+
+/* ── Helpers ───────────────────────────────────── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  el.classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function onSlider(val) {
+  val = +val;
+  document.getElementById('sliderNum').textContent  = val;
+  document.getElementById('sliderHint').textContent = HINTS[val];
+  const pct = val * 10;
+  document.getElementById('slider').style.background =
+    `linear-gradient(90deg, var(--accent) 0%, var(--accent2) ${pct}%, var(--surface2) ${pct}%)`;
+}
+
+/* ── Flow ──────────────────────────────────────── */
+function startTest() {
+  idx = 0; answers = []; transitionShown = false;
+  show('question');
+  renderQ();
+}
+
+function renderQ() {
+  const q = Q[idx];
+  const num = idx + 1;
+
+  document.getElementById('progLabel').textContent = `Вопрос ${num} из 21`;
+  document.getElementById('progPct').textContent   = `${Math.round(idx / 21 * 100)}%`;
+  document.getElementById('progFill').style.width  = `${idx / 21 * 100}%`;
+
+  const isHyper = q.s === 'hyper';
+  const tag = document.getElementById('sectionTag');
+  tag.className = `section-tag ${q.s}`;
+  document.getElementById('sectionIcon').textContent = isHyper ? '🔥' : '❄️';
+  document.getElementById('sectionName').textContent = isHyper ? 'Активация' : 'Торможение';
+
+  document.getElementById('qEmoji').textContent = q.e;
+  document.getElementById('qTitle').textContent = q.t;
+  document.getElementById('qDesc').textContent  = q.d;
+  document.getElementById('nextBtn').textContent = (idx === Q.length - 1) ? 'Узнать результат →' : 'Дальше →';
+
+  // reset slider
+  document.getElementById('slider').value = 5;
+  onSlider(5);
+
+  // re-run slide-in animation
+  const qs = document.getElementById('question');
+  qs.style.animation = 'none';
+  void qs.offsetHeight;
+  qs.style.animation = 'slideIn .38s cubic-bezier(.22,.9,.36,1) both';
+}
+
+function nextQuestion() {
+  haptic('light');
+  const val = +document.getElementById('slider').value;
+  answers.push(val);
+
+  // Transition after Q11 (idx 10)
+  if (idx === 10 && !transitionShown) {
+    transitionShown = true;
+    idx++;
+    buildDots();
+    show('transition');
+    return;
+  }
+
+  idx++;
+  if (idx >= Q.length) { calcResult(); return; }
+  renderQ();
+}
+
+function continueTest() {
+  haptic('medium');
+  show('question');
+  renderQ();
+}
+
+function buildDots() {
+  const row = document.getElementById('dotsRow');
+  row.innerHTML = Q.map((_, i) => {
+    const cls = i < 11 ? 'dot done' : i === 11 ? 'dot current' : 'dot';
+    return `<div class="${cls}"></div>`;
+  }).join('');
+}
+
+/* ── Calculation ───────────────────────────────── */
+function avg(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
+
+function calcResult() {
+  const hyper = avg(answers.slice(0, 11));
+  const hypo  = avg(answers.slice(11, 21));
+  const hR = Math.round(hyper * 10) / 10;
+  const yR = Math.round(hypo  * 10) / 10;
+
+  let key;
+  if      (hyper < 4 && hypo < 4)                                  key = 'window';
+  else if (hyper >= 4 && hyper > hypo + 1)                         key = 'hyper';
+  else if (hypo  >= 4 && hypo  > hyper + 1)                        key = 'hypo';
+  else if (hyper >= 3.5 && hyper <= 4.5 && hypo >= 3.5 && hypo <= 4.5) key = 'accumulated';
+  else if (hyper >= 4 && hypo >= 4)                                 key = 'swing';
+  else                                                               key = 'accumulated';
+
+  const res = RESULTS[key];
+
+  document.getElementById('rIcon').textContent    = res.icon;
+  document.getElementById('rState').textContent   = res.state;
+  document.getElementById('rState').style.color   = res.color;
+  document.getElementById('rTagline').textContent = res.tagline;
+  document.getElementById('rHyperVal').textContent = `${hR} / 10`;
+  document.getElementById('rHypoVal').textContent  = `${yR} / 10`;
+  document.getElementById('rHyperBar').style.width = `${hyper * 10}%`;
+  document.getElementById('rHypoBar').style.width  = `${hypo  * 10}%`;
+  document.getElementById('rBody').innerHTML    = res.body;
+  document.getElementById('rSupport').innerHTML = res.support;
+
+  // Top symptoms
+  const ranked = Q.map((q, i) => ({ q, score: answers[i] }))
+                   .sort((a, b) => b.score - a.score)
+                   .slice(0, 4);
+  document.getElementById('topList').innerHTML = ranked.map(({ q, score }) => `
+    <div class="symptom-item">
+      <span class="symptom-emoji">${q.e}</span>
+      <span class="symptom-name">${q.t}</span>
+      <span class="symptom-score">${score}</span>
+    </div>
+  `).join('');
+
+  _resultData = { key, res, hR, yR };
+  haptic('heavy');
+  show('result');
+}
+
+/* ── Share ─────────────────────────────────────── */
+function shareResult() {
+  if (!_resultData) return;
+  haptic('medium');
+  const { res, hR, yR } = _resultData;
+  const text = `Прошла(а) тест «Окно Толерантности» 🧠\n\n${res.icon} ${res.state}\n${res.tagline}\n\n🔥 Активация:    ${hR}/10\n🌫️ Торможение: ${yR}/10`;
+
+  if (tg?.openTelegramLink) {
+    const encoded = encodeURIComponent(text);
+    tg.openTelegramLink(`https://t.me/share/url?url=&text=${encoded}`);
+  } else if (navigator.share) {
+    navigator.share({ text }).catch(() => copyText(text));
+  } else {
+    copyText(text);
+  }
+}
+
+function copyText(text) {
+  navigator.clipboard?.writeText(text).then(() => {
+    const btn = document.querySelector('.btn-tg');
+    const orig = btn.textContent;
+    btn.textContent = '✓ Скопировано!';
+    setTimeout(() => btn.textContent = orig, 2200);
+  }).catch(() => alert(text));
+}
+
+function restartTest() { startTest(); }
+
+/* ── Init ──────────────────────────────────────── */
+onSlider(5);
+</script>
+</body>
+</html>
