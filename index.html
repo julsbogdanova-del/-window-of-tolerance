@@ -79,12 +79,6 @@
       background: var(--surface); color: var(--muted);
       border: 1px solid var(--border); margin-top: 10px; font-size: 15px;
     }
-    .btn-tg {
-      background: linear-gradient(135deg, #229ED9, #0e7fc0);
-      color: #fff;
-      box-shadow: 0 6px 22px rgba(34,158,217,.32);
-    }
-
     .spacer { flex: 1; }
 
     /* ══════════════════════════════════════════════════════════
@@ -243,6 +237,138 @@
       font-size: 14px; line-height: 1.65; color: var(--muted);
     }
     .support-block strong { color: var(--accent2); }
+    .instruction-card {
+      background: var(--surface); border-radius: var(--radius);
+      padding: 14px 16px; font-size: 13px; color: var(--muted);
+      line-height: 1.65; margin-bottom: 16px;
+    }
+    .instruction-card strong { color: var(--text); font-weight: 600; }
+    .btn-product {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; border-radius: var(--radius);
+      padding: 16px; font-size: 16px; font-weight: 600;
+      text-align: center; text-decoration: none; cursor: pointer;
+      transition: opacity .15s; margin-top: 12px;
+    }
+    .btn-product:active { opacity: .85; }
+    .product-cta { margin: 12px 0 8px; }
+    .product-cta p { font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 4px; }
+
+
+    /* Компактные карточки (показатели + симптомы) */
+    .card--compact { padding: 12px 14px; margin-bottom: 10px; }
+    .card--compact .card-label { font-size: 10px; margin-bottom: 10px; }
+    .card--compact .score-row  { margin-bottom: 8px; }
+    .card--compact .score-name { font-size: 12px; }
+    .card--compact .score-val  { font-size: 12px; font-weight: 600; }
+    .card--compact .score-bg   { height: 6px; }
+    .card--compact .symptom-item { margin-bottom: 6px; }
+    .card--compact .symptom-emoji { font-size: 16px; min-width: 22px; }
+    .card--compact .symptom-name  { font-size: 12px; }
+    .card--compact .symptom-score { font-size: 12px; }
+    .symptom-tied { font-size: 11px; color: var(--muted); margin-top: 4px; font-style: italic; }
+
+    /* Главная карточка с текстом результата */
+    .card--main { padding: 20px 18px; margin-bottom: 14px; border: 1px solid rgba(255,255,255,0.1); }
+    .card--main .result-body { font-size: 15px; }
+
+    /* Объединённый CTA-блок */
+    .cta-block {
+      background: linear-gradient(135deg, rgba(124,106,247,.10), rgba(247,199,94,.06));
+      border: 1px solid rgba(124,106,247,.18);
+      border-radius: var(--radius); padding: 18px; margin-bottom: 10px;
+    }
+    .cta-intro {
+      font-size: 15px; font-weight: 700; color: var(--text);
+      margin-bottom: 14px; line-height: 1.35;
+    }
+    .cta-webinar-date {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--warn); background: rgba(247,199,94,.12);
+      border: 1px solid rgba(247,199,94,.28); border-radius: 100px;
+      padding: 3px 9px; margin-bottom: 8px;
+    }
+    .cta-praktikum-date {
+      display: inline-flex; align-items: center; gap: 5px;
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--accent2); background: rgba(124,106,247,.12);
+      border: 1px solid rgba(180,142,247,.3); border-radius: 100px;
+      padding: 3px 9px; margin-bottom: 8px;
+    }
+    .cta-webinar-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px;
+    }
+    .cta-divider {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11px; color: var(--muted); text-transform: uppercase;
+      letter-spacing: .6px; margin: 14px 0;
+    }
+    .cta-divider::before, .cta-divider::after {
+      content: ''; flex: 1; height: 1px; background: var(--border);
+    }
+    .cta-praktikum-desc {
+      font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px;
+    }
+    .btn-product-ghost {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: #fff; border: none; border-radius: 12px;
+      padding: 14px; font-size: 15px; font-weight: 700;
+      text-align: center; text-decoration: none; cursor: pointer;
+      box-shadow: 0 6px 22px rgba(124,106,247,.32);
+      transition: opacity .15s;
+    }
+    .btn-product-ghost:active { opacity: .85; }
+
+    /* Вебинар-блок (legacy, не используется) */
+    .webinar-block {
+      background: linear-gradient(135deg, rgba(247,199,94,.10), rgba(247,119,94,.07));
+      border: 1px solid rgba(247,199,94,.25);
+      border-radius: var(--radius); padding: 16px 18px; margin-bottom: 14px;
+    }
+    .webinar-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .webinar-badge {
+      font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+      color: var(--warn); background: rgba(247,199,94,.15);
+      border: 1px solid rgba(247,199,94,.3); border-radius: 100px; padding: 3px 9px;
+    }
+    .webinar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+    .webinar-desc { font-size: 13px; color: var(--muted); line-height: 1.65; margin-bottom: 12px; }
+    .btn-webinar {
+      display: block; width: 100%;
+      background: linear-gradient(135deg, var(--warn), #f79a5e);
+      color: #0f0e17; border: none; border-radius: 12px;
+      padding: 14px; font-size: 15px; font-weight: 700;
+      text-align: center; text-decoration: none; cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn-webinar:active { opacity: .85; }
+
+    /* Кнопка "Сохранить" — маленькая, без акцента */
+    .btn-save {
+      background: transparent; border: 1px solid var(--border);
+      color: var(--muted); border-radius: 12px;
+      padding: 12px; font-size: 13px; font-weight: 500;
+      width: 100%; cursor: pointer; margin-top: 8px;
+      transition: opacity .13s;
+    }
+    .btn-save:active { opacity: .7; }
+
+    /* Согласие на обработку данных */
+    .consent-row {
+      display: flex; align-items: flex-start; gap: 9px;
+      margin-bottom: 14px; padding: 0 2px;
+    }
+    .consent-row input[type=checkbox] {
+      width: 16px; height: 16px; min-width: 16px;
+      margin-top: 2px; accent-color: var(--accent); cursor: pointer;
+    }
+    .consent-row label {
+      font-size: 12px; color: var(--muted); line-height: 1.5; cursor: pointer;
+    }
+    .consent-row a { color: var(--accent2); text-decoration: none; }
   </style>
 </head>
 <body>
@@ -253,22 +379,30 @@
   <div class="intro-hero">
     <div class="orb anim-up"></div>
     <div class="intro-title anim-up" style="animation-delay:.08s">Окно<br>Толерантности</div>
-    <div class="intro-sub  anim-up" style="animation-delay:.13s">Тест состояния нервной системы</div>
+    <div class="intro-sub  anim-up" style="animation-delay:.13s">Узнай, в каком состоянии сейчас твоя нервная система</div>
   </div>
 
   <div class="quote-card anim-up" style="animation-delay:.18s">
-    <p>«Окно Толерантности» — оптимальный диапазон активации нервной системы, в котором человек способен эффективно функционировать, учиться и восстанавливаться.</p>
+    <p>«Окно толерантности» — это твой личный диапазон устойчивости. Пока ты в нём, ты справляешься. Когда выходишь за его границы — начинается перегруз или истощение.</p>
     <cite>— Питер Левин, Дэн Сигел</cite>
+  </div>
+
+  <div class="instruction-card anim-up" style="animation-delay:.20s">
+    <p>Тест состоит из двух блоков: 11 вопросов про перегруз и 10 про истощение. К каждому — ползунок от 1 до 10.</p>
+    <p style="margin-top:8px"><strong>1 — едва заметно, 10 — крайне интенсивно.</strong> Оценивай своё состояние за последний месяц.</p>
   </div>
 
   <div class="stat-grid anim-up" style="animation-delay:.22s">
     <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-value">21</div><div class="stat-label">короткий вопрос</div></div>
     <div class="stat-card"><div class="stat-icon">⏱</div><div class="stat-value">5 мин</div><div class="stat-label">примерно</div></div>
-    <div class="stat-card"><div class="stat-icon">🎯</div><div class="stat-value">0 – 10</div><div class="stat-label">шкала ответов</div></div>
-    <div class="stat-card"><div class="stat-icon">🔒</div><div class="stat-value">анонимно</div><div class="stat-label">данные не хранятся</div></div>
   </div>
 
   <div class="spacer"></div>
+
+  <div class="consent-row anim-up" style="animation-delay:.25s">
+    <input type="checkbox" id="consentCheck" checked>
+    <label for="consentCheck">Я согласен(-на) с политикой обработки персональных данных</label>
+  </div>
 
   <button class="btn btn-primary anim-up" style="animation-delay:.26s" onclick="startTest()">
     Начать тест →
@@ -289,25 +423,20 @@
     </div>
   </div>
 
-  <div class="section-tag hyper" id="sectionTag">
-    <span id="sectionIcon">🔥</span>
-    <span id="sectionName">Активация</span>
-  </div>
-
   <span class="q-emoji" id="qEmoji">😰</span>
   <div class="q-title"  id="qTitle">…</div>
-  <div class="q-desc"   id="qDesc">…</div>
+  <div class="q-desc"   id="qDesc" style="display:none;margin:0"></div>
 
   <div class="slider-value-box">
     <div class="slider-num"  id="sliderNum">5</div>
     <div class="slider-hint" id="sliderHint">бывает заметно</div>
   </div>
-  <input type="range" id="slider" min="0" max="10" value="5"
+  <input type="range" id="slider" min="1" max="10" value="5"
          oninput="onSlider(this.value)">
   <div class="slider-scale">
-    <span>0 — совсем нет</span>
+    <span>1 — едва заметно</span>
     <span>5</span>
-    <span>10 — очень сильно</span>
+    <span>10 — крайне интенсивно</span>
   </div>
 
   <div class="spacer"></div>
@@ -321,9 +450,9 @@
 <!-- ══════════════ SCREEN 3: TRANSITION ══════════════ -->
 <div id="transition" class="screen">
   <div class="tr-icon">✅</div>
-  <div class="tr-title">Первая половина пройдена</div>
+  <div class="tr-title">Половина — позади! 🎉</div>
   <div class="tr-text">
-    Теперь про другое состояние — когда всё как будто замедляется, тускнеет и отключается.
+    Осталось ещё 10 вопросов — и картина будет полной.
   </div>
   <div class="dots-row" id="dotsRow"></div>
   <button class="btn btn-primary" onclick="continueTest()">
@@ -341,7 +470,8 @@
     <div  class="result-tagline" id="rTagline">…</div>
   </div>
 
-  <div class="card">
+  <!-- Показатели — компактно -->
+  <div class="card card--compact">
     <div class="card-label">Показатели</div>
     <div class="score-row">
       <div class="score-meta">
@@ -359,19 +489,36 @@
     </div>
   </div>
 
-  <div class="card">
-    <div class="result-body" id="rBody"></div>
-  </div>
-
-  <div class="card" id="topCard">
+  <!-- Топ симптомов — компактно -->
+  <div class="card card--compact" id="topCard">
     <div class="card-label">Что проявлено сильнее всего</div>
     <div id="topList"></div>
   </div>
 
-  <div class="support-block" id="rSupport"></div>
+  <!-- Главный блок — текст результата -->
+  <div class="card card--main">
+    <div class="result-body" id="rBody"></div>
+  </div>
 
-  <button class="btn btn-tg"   onclick="shareResult()">Поделиться результатом 📤</button>
-  <button class="btn btn-ghost" onclick="restartTest()">Пройти снова</button>
+  <div class="support-block" id="rSupport" style="display:none"></div>
+
+  <!-- Объединённый CTA -->
+  <div class="cta-block">
+    <div class="cta-intro">Хочешь разобраться, что с этим делать дальше?</div>
+
+    <div class="cta-webinar-date">📅 13 июня, 11:00 по МСК</div>
+    <p class="cta-webinar-desc"><strong style="color:var(--text)">Бесплатный вебинар</strong> — разберём результаты нескольких участников вживую, чтобы понять, что стоит за цифрами, и найдем первые шаги к устойчивости.</p>
+    <a class="btn-webinar" href="https://t.me/comfotzone_bot?start=webinar" target="_blank">Хочу на разбор →</a>
+
+    <div class="cta-divider">а ещё</div>
+
+    <div class="cta-praktikum-date">📆 20 июня — 18 июля</div>
+    <p class="cta-praktikum-desc">Если хочется не просто понять, что происходит, но и системно с этим поработать — ждём тебя на практикуме <strong style="color:var(--text)">«Я управляю стрессом»</strong>. Научишься управлять своим состоянием, чтобы чувствовать себя лучше и получать больше удовольствия от жизни.</p>
+    <a class="btn-product-ghost" href="https://zona-comforta.notion.site/practicum?source=test" target="_blank">Узнать о практикуме →</a>
+  </div>
+
+  <!-- Сохранить — tertiary -->
+  <button class="btn-save" onclick="shareResult()">💾 Сохранить результат</button>
 </div>
 
 
@@ -387,83 +534,105 @@ function haptic(type = 'light') { tg?.HapticFeedback?.impactOccurred?.(type); }
 /* ── Questions ─────────────────────────────────── */
 const Q = [
   // ГИПЕРАКТИВАЦИЯ
-  { s:'hyper', e:'😰', t:'Внутреннее напряжение или тревожный фон',               d:'внутри всё время натянуто, сложно расслабиться, есть постоянный фон тревоги' },
-  { s:'hyper', e:'😤', t:'Раздражение, вспышки, трудно сдержаться',               d:'мелочи бесят сильнее обычного, легко вспыхиваешь' },
-  { s:'hyper', e:'😨', t:'Ощущение опасности, сложно почувствовать безопасность', d:'как будто нужно быть настороже, трудно расслабиться' },
-  { s:'hyper', e:'🌀', t:'Голова не выключается, мысли по кругу',                  d:'постоянно думаешь одно и то же, не можешь остановить поток мыслей' },
-  { s:'hyper', e:'🌊', t:'Чувства захлёстывают, трудно собраться',                 d:'эмоции накрывают так сильно, что сложно держаться в фокусе' },
-  { s:'hyper', e:'⚡', t:'Ускоренность: спешка, быстрая речь, трудно остановиться',d:'всё время спешишь, сложно замедлиться даже без причины' },
-  { s:'hyper', e:'😬', t:'Зажатость тела: плечи, челюсть, мышцы',                 d:'тело напряжено, челюсть сжата, плечи подняты' },
-  { s:'hyper', e:'😴', t:'Трудно расслабиться / поверхностный сон',                d:'вроде отдыхаешь, но организм не отпускает' },
-  { s:'hyper', e:'🦋', t:'Суета, сложно усидеть спокойно',                         d:'хочется переключаться, вставать, двигаться — трудно просто быть' },
-  { s:'hyper', e:'💓', t:'Телесный стресс: сердцебиение, потливость',              d:'тело реагирует как при тревоге или перегрузе' },
-  { s:'hyper', e:'👂', t:'Повышенная чувствительность к звукам и свету',           d:'обычные звуки, свет или люди раздражают сильнее обычного' },
+  { s:'hyper', e:'😰', t:'Постоянное внутреннее напряжение, тревожность' },
+  { s:'hyper', e:'😤', t:'Импульсивные эмоциональные реакции (гнев, раздражительность, резкость)' },
+  { s:'hyper', e:'😨', t:'Гипер-бдительность, ощущение «опасность рядом»' },
+  { s:'hyper', e:'🌀', t:'Скачущие или навязчивые мысли, невозможность остановить поток' },
+  { s:'hyper', e:'🌊', t:'Эмоциональное затопление — чувства захлёстывают и не поддаются регуляции' },
+  { s:'hyper', e:'⚡', t:'Ускоренная речь, трудности остановиться' },
+  { s:'hyper', e:'😬', t:'Сжатие челюстей, скованность в теле, мышечное напряжение' },
+  { s:'hyper', e:'😴', t:'Трудности с расслаблением, поверхностный или прерывистый сон' },
+  { s:'hyper', e:'🦋', t:'Повышенная моторная активность (резкие движения, суета, невозможность сидеть спокойно)' },
+  { s:'hyper', e:'💓', t:'Соматические проявления: учащённое сердцебиение, потливость, сухость во рту, мышечные боли' },
+  { s:'hyper', e:'👂', t:'Повышенная чувствительность к звукам, свету или прикосновениям' },
   // ГИПОАКТИВАЦИЯ
-  { s:'hypo',  e:'🤖', t:'Отстранённость, как будто автопилот',                    d:'делаешь всё автоматически, без ощущения включённости' },
-  { s:'hypo',  e:'🫥', t:'Онемение или ощущение, будто смотришь со стороны',       d:'как будто отключился от происходящего или от себя' },
-  { s:'hypo',  e:'😶', t:'Чувства приглушены или недоступны',                       d:'сложно почувствовать радость, интерес, злость или грусть' },
-  { s:'hypo',  e:'🌫️',t:'Туман в голове, трудно думать',                           d:'мысли вязкие, сложно сосредоточиться и собраться' },
-  { s:'hypo',  e:'🤷', t:'Сложно принимать даже простые решения',                  d:'выбрать еду, написать сообщение или начать дело уже тяжело' },
-  { s:'hypo',  e:'🐢', t:'Замедленность мыслей, речи, движений',                   d:'будто всё внутри тормозит' },
-  { s:'hypo',  e:'🏋️',t:'Слабость, тяжесть в теле, мало сил',                     d:'тело тяжёлое, энергии почти нет' },
-  { s:'hypo',  e:'🌙', t:'Сонливость или сон не восстанавливает',                   d:'спишь, но ощущение усталости не уходит' },
-  { s:'hypo',  e:'🥶', t:'Холод, зябкость, снижение ресурса',                       d:'мёрзнешь, нет тонуса, организм как будто экономит заряд' },
-  { s:'hypo',  e:'🐚', t:'Хочется спрятаться, избегать людей',                      d:'нет сил на общение, хочется закрыться от мира' },
+  { s:'hypo',  e:'🤖', t:'Чувство отстранённости, ощущение себя на «автопилоте»' },
+  { s:'hypo',  e:'🫥', t:'Онемение, ощущение что смотришь на себя со стороны, тело как будто не своё' },
+  { s:'hypo',  e:'😶', t:'Эмоциональное онемение — чувства недоступны или очень приглушены' },
+  { s:'hypo',  e:'🌫️', t:'Заторможенность мыслей, невозможность сосредоточиться, туман в голове' },
+  { s:'hypo',  e:'🤷', t:'Трудности в принятии решений, паралич воли' },
+  { s:'hypo',  e:'🐢', t:'Замедленная речь и движения' },
+  { s:'hypo',  e:'🏋️', t:'Физическая слабость, низкий тонус мышц, чувство тяжести в теле' },
+  { s:'hypo',  e:'🌙', t:'Избыточный сон без ощущения восстановления' },
+  { s:'hypo',  e:'🥶', t:'Соматические проявления: холод в теле, зябкость, низкое давление, замедленный пульс' },
+  { s:'hypo',  e:'🐚', t:'Желание спрятаться, избегать контакта, исчезнуть' },
 ];
 
-const HINTS = [
-  'совсем не про меня', 'едва заметно', 'редко бывает',
-  'иногда бывает', 'замечаю это', 'бывает заметно',
-  'довольно часто', 'часто так бывает', 'очень часто',
-  'почти всегда', 'очень сильно про меня'
-];
+const HINTS = ['', 'едва заметно', '', '', '', '', '', '', '', '', 'крайне интенсивно'];
 
 /* ── Results config ────────────────────────────── */
 const RESULTS = {
-  window: {
+  ok_mixed: {
     icon: '🌿', color: '#5ef7a6',
     state: 'Устойчивое окно толерантности',
     tagline: 'Нервная система сейчас в ресурсе',
-    body: `<p><strong>Похоже, прямо сейчас ты достаточно хорошо справляешься с нагрузкой.</strong></p>
-           <p>Нервная система держит баланс — нет ни явного перегруза, ни ощутимого истощения. Ты можешь функционировать, чувствовать и восстанавливаться.</p>
-           <p>Это не «всё идеально» — просто сейчас есть ресурс. Его стоит беречь.</p>`,
-    support: `<strong>Что помогает удерживать это состояние:</strong> регулярный сон, паузы в течение дня, внимание к телесным сигналам. Ты уже знаешь, что работает — продолжай.`
+    body: `<p><strong>Прямо сейчас нервная система держит баланс.</strong></p>
+           <p>Нет явного перегруза, нет ощутимого истощения. Ты можешь функционировать, чувствовать и восстанавливаться.</p>
+           <p>Это не «всё идеально» — просто сейчас есть ресурс. Его стоит беречь.</p>`
   },
-  hyper: {
-    icon: '🔥', color: '#f7775e',
-    state: 'Перегруз нервной системы',
-    tagline: 'Организм работает на высоких оборотах',
-    body: `<p><strong>Похоже, нервная система давно работает на высоких оборотах и не успевает восстанавливаться.</strong></p>
-           <p>Поэтому голова не выключается, тело зажато, а сил становится меньше — даже если внешне всё «вроде нормально».</p>
-           <p>Это не «с тобой что-то не так». Часто так выглядит накопленная нагрузка, когда нервная система долго держит тонус без настоящего отдыха.</p>`,
-    support: `<strong>Нервной системе в перегрузе нужна не «ещё одна попытка», а пауза.</strong> Не «брось всё» — а замедлиться хотя бы в мелочах. Это работает сильнее, чем кажется.`
+  ok_hyper: {
+    icon: '🌱', color: '#a0f77e',
+    state: 'В ресурсе, с лёгкой активацией',
+    tagline: 'Нервная система справляется, но немного перегрета',
+    body: `<p><strong>В целом нервная система справляется.</strong></p>
+           <p>Есть небольшой уклон в сторону активации: чуть больше напряжения, скорости, реактивности. Пока это в рамках нормы — но стоит замечать, когда это усиливается.</p>
+           <p>Хороший момент, чтобы добавить в день что-то замедляющее.</p>`
   },
-  hypo: {
-    icon: '🌫️', color: '#5ea6f7',
-    state: 'Истощение нервной системы',
-    tagline: 'Организм перешёл в режим экономии',
-    body: `<p><strong>Похоже, нервная система перешла в режим «экономии заряда».</strong></p>
-           <p>Это бывает, когда она долго справлялась с нагрузкой — и в какой-то момент просто притормозила. Отсюда туман, отстранённость, слабость и нежелание контактировать с миром.</p>
-           <p>Это не лень и не «что-то со мной не так». Это защитная реакция системы, которая давно не восстанавливалась.</p>`,
-    support: `<strong>При истощении важно не «разогнать» себя, а дать системе безопасно оттаять.</strong> Тепло, простые приятные вещи, меньше требований к себе — это не баловство, это лечение.`
+  ok_hypo: {
+    icon: '🍃', color: '#7ecff7',
+    state: 'В ресурсе, с лёгким торможением',
+    tagline: 'Нервная система справляется, но немного притормаживает',
+    body: `<p><strong>В целом нервная система справляется.</strong></p>
+           <p>Есть небольшой уклон в сторону торможения: чуть меньше энергии, скорости реакции, доступности чувств. Пока это в рамках нормы — но стоит следить, чтобы не уходить глубже.</p>
+           <p>Хороший момент, чтобы добавить в день что-то тонизирующее и приятное.</p>`
   },
-  swing: {
-    icon: '🎢', color: '#b48ef7',
-    state: 'Качели нервной системы',
-    tagline: 'Между перегрузом и истощением',
-    body: `<p><strong>Похоже, нервная система мечется между двумя полюсами: то перегружает, то отключается.</strong></p>
-           <p>Это одно из самых изматывающих состояний — нет стабильности. То внутри всё натянуто и не выключается, то резко накрывает туман и усталость.</p>
-           <p>Так бывает, когда организм слишком долго работал в условиях нестабильности — и уже не знает, как по-другому.</p>`,
-    support: `<strong>Нервной системе в «качелях» нужна прежде всего предсказуемость.</strong> Простые ритмы — сон в одно время, еда, небольшие паузы — это якоря. Они работают медленно, но работают.`
+  attention_hyper: {
+    icon: '🔸', color: '#f7a05e',
+    state: 'Перегруз нарастает',
+    tagline: 'Нервная система работает выше нормы',
+    body: `<p><strong>Нервная система работает на повышенных оборотах — и это уже заметно.</strong></p>
+           <p>Напряжение, реактивность, голова не выключается, тело зажато. Это не «просто стресс» — это сигнал, что нагрузка накапливается быстрее, чем успевает уходить.</p>
+           <p>Сейчас важно не разогнаться ещё сильнее. Паузы, замедление, выход из режима готовности — это не слабость, а необходимость.</p>`
   },
-  accumulated: {
+  attention_hypo: {
+    icon: '🌫️', color: '#7eb5f7',
+    state: 'Истощение нарастает',
+    tagline: 'Нервная система переходит в режим экономии',
+    body: `<p><strong>Нервная система начинает притормаживать — и это уже заметно в повседневной жизни.</strong></p>
+           <p>Туман в голове, меньше сил, сложнее включаться и принимать решения. Это не лень — это сигнал, что восстановление давно не успевает за расходом ресурса.</p>
+           <p>Сейчас важно не требовать от себя большего, а найти, где можно разгрузиться.</p>`
+  },
+  attention_mixed: {
     icon: '⚡', color: '#f7c55e',
     state: 'Накопленная нагрузка',
     tagline: 'Нервная система близка к пределу',
-    body: `<p><strong>Похоже, нагрузка накопилась — и нервная система это уже чувствует.</strong></p>
-           <p>Пока нет явного перегруза или истощения, но граница близко. Не «всё плохо», но «стоит обратить внимание».</p>
-           <p>Часто в таком состоянии человек справляется — но ценой большего, чем должно быть.</p>`,
-    support: `<strong>Хорошая новость:</strong> на этом этапе небольшие изменения дают заметный эффект. Не нужно кардинально перестраивать жизнь — достаточно начать замечать, где тратится больше всего сил.`
+    body: `<p><strong>Нагрузка накопилась по обоим направлениям — и нервная система это уже чувствует.</strong></p>
+           <p>Нет явного перегруза или истощения, но ресурс заметно снизился. Ты справляешься — но ценой большего, чем должно быть.</p>
+           <p>Небольшие изменения сейчас могут дать заметный эффект. Не нужно кардинально перестраивать жизнь — достаточно найти, где тратится больше всего сил.</p>`
+  },
+  critical_hyper: {
+    icon: '🔥', color: '#f7615e',
+    state: 'Острый перегруз',
+    tagline: 'Нервная система сейчас на пределе активации',
+    body: `<p><strong>Нервная система давно работает на пределе и не успевает восстанавливаться.</strong></p>
+           <p>Поэтому голова не выключается, тело зажато, реакции острее обычного — а сил становится всё меньше, даже если внешне всё «вроде нормально».</p>
+           <p>Это не «с тобой что-то не так». Это то, как выглядит накопленная нагрузка, когда нервная система слишком долго держала тонус без настоящего отдыха. Сейчас ей нужна не «ещё одна попытка», а пауза.</p>`
+  },
+  critical_hypo: {
+    icon: '🌑', color: '#5e7af7',
+    state: 'Глубокое истощение',
+    tagline: 'Нервная система выключилась, чтобы выжить',
+    body: `<p><strong>Нервная система перешла в режим глубокой экономии.</strong></p>
+           <p>Это бывает, когда она долго справлялась с нагрузкой и в какой-то момент просто отключилась. Отсюда туман, отстранённость, слабость, нежелание контактировать с миром.</p>
+           <p>Это не лень и не «что-то со мной не так». Это защитная реакция системы, которая давно не восстанавливалась. При истощении важно не «разогнать» себя, а дать системе безопасно оттаять.</p>`
+  },
+  critical_mixed: {
+    icon: '🎢', color: '#b48ef7',
+    state: 'На пределе',
+    tagline: 'Нервная система истощена по обоим направлениям',
+    body: `<p><strong>Нервная система мечется между двумя полюсами: то перегружает, то отключается.</strong></p>
+           <p>Это одно из самых изматывающих состояний — нет стабильности. То внутри всё натянуто и не выключается, то резко накрывает туман и усталость.</p>
+           <p>Так бывает, когда организм слишком долго работал в условиях нестабильности. Нервной системе в таком состоянии нужна прежде всего предсказуемость: простые ритмы, сон в одно время, небольшие паузы — это якоря.</p>`
   }
 };
 
@@ -485,7 +654,7 @@ function onSlider(val) {
   val = +val;
   document.getElementById('sliderNum').textContent  = val;
   document.getElementById('sliderHint').textContent = HINTS[val];
-  const pct = val * 10;
+  const pct = Math.round((val - 1) / 9 * 100);
   document.getElementById('slider').style.background =
     `linear-gradient(90deg, var(--accent) 0%, var(--accent2) ${pct}%, var(--surface2) ${pct}%)`;
 }
@@ -505,15 +674,9 @@ function renderQ() {
   document.getElementById('progPct').textContent   = `${Math.round(idx / 21 * 100)}%`;
   document.getElementById('progFill').style.width  = `${idx / 21 * 100}%`;
 
-  const isHyper = q.s === 'hyper';
-  const tag = document.getElementById('sectionTag');
-  tag.className = `section-tag ${q.s}`;
-  document.getElementById('sectionIcon').textContent = isHyper ? '🔥' : '❄️';
-  document.getElementById('sectionName').textContent = isHyper ? 'Активация' : 'Торможение';
-
   document.getElementById('qEmoji').textContent = q.e;
   document.getElementById('qTitle').textContent = q.t;
-  document.getElementById('qDesc').textContent  = q.d;
+  document.getElementById('qDesc').textContent  = '';
   document.getElementById('nextBtn').textContent = (idx === Q.length - 1) ? 'Узнать результат →' : 'Дальше →';
 
   // reset slider
@@ -563,20 +726,21 @@ function buildDots() {
 /* ── Calculation ───────────────────────────────── */
 function avg(arr) { return arr.reduce((a, b) => a + b, 0) / arr.length; }
 
+function getResultKey(h, y) {
+  const maxVal = Math.max(h, y);
+  const diff   = h - y;
+  const level  = maxVal <= 5 ? 'ok' : maxVal < 7 ? 'attention' : 'critical';
+  const type   = diff >= 2.5 ? 'hyper' : diff <= -2.5 ? 'hypo' : 'mixed';
+  return `${level}_${type}`;
+}
+
 function calcResult() {
   const hyper = avg(answers.slice(0, 11));
   const hypo  = avg(answers.slice(11, 21));
   const hR = Math.round(hyper * 10) / 10;
   const yR = Math.round(hypo  * 10) / 10;
 
-  let key;
-  if      (hyper < 4 && hypo < 4)                                  key = 'window';
-  else if (hyper >= 4 && hyper > hypo + 1)                         key = 'hyper';
-  else if (hypo  >= 4 && hypo  > hyper + 1)                        key = 'hypo';
-  else if (hyper >= 3.5 && hyper <= 4.5 && hypo >= 3.5 && hypo <= 4.5) key = 'accumulated';
-  else if (hyper >= 4 && hypo >= 4)                                 key = 'swing';
-  else                                                               key = 'accumulated';
-
+  const key = getResultKey(hyper, hypo);
   const res = RESULTS[key];
 
   document.getElementById('rIcon').textContent    = res.icon;
@@ -585,22 +749,34 @@ function calcResult() {
   document.getElementById('rTagline').textContent = res.tagline;
   document.getElementById('rHyperVal').textContent = `${hR} / 10`;
   document.getElementById('rHypoVal').textContent  = `${yR} / 10`;
-  document.getElementById('rHyperBar').style.width = `${hyper * 10}%`;
-  document.getElementById('rHypoBar').style.width  = `${hypo  * 10}%`;
+  document.getElementById('rHyperBar').style.width = `${(hyper - 1) / 9 * 100}%`;
+  document.getElementById('rHypoBar').style.width  = `${(hypo  - 1) / 9 * 100}%`;
   document.getElementById('rBody').innerHTML    = res.body;
-  document.getElementById('rSupport').innerHTML = res.support;
 
-  // Top symptoms
+  // Top symptoms — топ-3, показываем только если есть явно выраженные
   const ranked = Q.map((q, i) => ({ q, score: answers[i] }))
-                   .sort((a, b) => b.score - a.score)
-                   .slice(0, 4);
-  document.getElementById('topList').innerHTML = ranked.map(({ q, score }) => `
-    <div class="symptom-item">
-      <span class="symptom-emoji">${q.e}</span>
-      <span class="symptom-name">${q.t}</span>
-      <span class="symptom-score">${score}</span>
-    </div>
-  `).join('');
+                   .sort((a, b) => b.score - a.score);
+  const spread = ranked[0].score - ranked[ranked.length - 1].score;
+  const topCard = document.getElementById('topCard');
+  if (spread < 2) {
+    topCard.style.display = 'none';
+  } else {
+    topCard.style.display = '';
+    const top3 = ranked.slice(0, 3);
+    const borderScore = top3[2]?.score;
+    // Считаем, сколько ещё симптомов с тем же баллом за пределами топ-3
+    const tiedExtra = ranked.slice(3).filter(x => x.score === borderScore).length;
+    const tiedNote = tiedExtra > 0
+      ? `<div class="symptom-tied">и ещё ${tiedExtra} симптом${tiedExtra > 1 ? 'а' : ''} с баллом ${borderScore}</div>`
+      : '';
+    document.getElementById('topList').innerHTML = top3.map(({ q, score }) => `
+      <div class="symptom-item">
+        <span class="symptom-emoji">${q.e}</span>
+        <span class="symptom-name">${q.t}</span>
+        <span class="symptom-score">${score}</span>
+      </div>
+    `).join('') + tiedNote;
+  }
 
   _resultData = { key, res, hR, yR };
 
@@ -636,8 +812,34 @@ function calcResult() {
 function shareResult() {
   if (!_resultData) return;
   haptic('medium');
-  const { res, hR, yR } = _resultData;
-  const text = `Прошла(а) тест «Окно Толерантности» 🧠\n\n${res.icon} ${res.state}\n${res.tagline}\n\n🔥 Активация:    ${hR}/10\n🌫️ Торможение: ${yR}/10`;
+  const { key, res, hR, yR } = _resultData;
+
+  // Основной текст результата (strip HTML)
+  const bodyPlain = res.body.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
+  // Топ-3 симптомы для текста (без эмодзи)
+  const ranked = Q.map((q, i) => ({ q, score: answers[i] }))
+                   .sort((a, b) => b.score - a.score);
+  const spread = ranked[0].score - ranked[ranked.length - 1].score;
+  const topText = spread >= 2
+    ? '\nЧто проявлено сильнее всего:\n' + ranked.slice(0, 3).map(x => `• ${x.q.t} — ${x.score}`).join('\n')
+    : '';
+
+  const text = [
+    '🧠 Окно Толерантности — мой результат',
+    '',
+    `${res.icon} ${res.state}`,
+    res.tagline,
+    '',
+    `🔥 Активация:      ${hR} / 10`,
+    `🌫️ Торможение: ${yR} / 10`,
+    topText,
+    '',
+    bodyPlain,
+    '',
+    '📅 Вебинар-разбор 13 июня, 11:00 МСК: https://t.me/zonakomfortatut',
+    '🎓 Практикум «Я управляю стрессом»: https://t.me/zonakomfortatut',
+  ].join('\n');
 
   if (tg?.openTelegramLink) {
     const encoded = encodeURIComponent(text);
@@ -651,7 +853,7 @@ function shareResult() {
 
 function copyText(text) {
   navigator.clipboard?.writeText(text).then(() => {
-    const btn = document.querySelector('.btn-tg');
+    const btn = document.querySelector('.btn-save');
     const orig = btn.textContent;
     btn.textContent = '✓ Скопировано!';
     setTimeout(() => btn.textContent = orig, 2200);
